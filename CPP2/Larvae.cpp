@@ -3,20 +3,21 @@
 #include "Nest.h"
 
 
-Larvae::Larvae(int hunger, Queen *queen, Nest *nest) : Entity(hunger, nest)
+larvae::larvae(const int hunger, int (*queen_method)(), Nest *nest) : ant(hunger, nest)
 {
-	q = queen;
+	queen_api_ = queen_method;
+	time_before_evolving_ = LARVAE_TIME;
 }
 
-void Larvae::Act()
+void larvae::act()
 {
-	nest->UseResources(hunger);
-	timeBeforeEvolving--;
-	if (timeBeforeEvolving == 0)
-		Evolve();
+	nest_->UseResources(hunger_);
+	time_before_evolving_--;
+	if (time_before_evolving_ == 0)
+		evolve();
 }
 
-void Larvae::Evolve()
+void larvae::evolve() const
 {
-	q->AskForEvolve(this);
+	queen_api_();
 }

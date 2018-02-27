@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Soldier.h"
 
-Soldier::Soldier(int hunger, Nest *nest) : Entity(hunger, nest)
+Soldier::Soldier(int hunger, Nest *nest) : ant(hunger, nest)
 {
 	power = nest->getSoldierInfo();
 }

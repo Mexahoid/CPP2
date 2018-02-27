@@ -2,7 +2,12 @@
 #include "Overseer.h"
 
 
-Overseer::Overseer(int hunger, Nest *nest) : Entity(hunger, nest)
+overseer::overseer(const int hunger, Nest *nest) : ant(hunger, nest)
+{
+
+}
+
+overseer::~overseer()
 {
 
 }

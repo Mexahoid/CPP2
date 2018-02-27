@@ -1,9 +1,10 @@
 #pragma once
-#include "Entity.h"
+#include "ant.h"
 
-class Overseer : public Entity
+class overseer : public ant
 {
 public:
-	Overseer(int hunger, Nest *nest);
+	overseer(int hunger, Nest *nest);
+	~overseer();
 };
 

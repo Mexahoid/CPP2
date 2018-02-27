@@ -148,7 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Entities.h" />
-    <ClInclude Include="Entity.h" />
+    <ClInclude Include="ant.h" />
     <ClInclude Include="Larvae.h" />
     <ClInclude Include="Overseer.h" />
     <ClInclude Include="Queen.h" />
@@ -160,7 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CPP2.cpp" />
-    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="ant.cpp" />
     <ClCompile Include="Larvae.cpp" />
     <ClCompile Include="Overseer.cpp" />
     <ClCompile Include="Queen.cpp" />

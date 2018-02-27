@@ -9,11 +9,11 @@ Nest::Nest(int max)
 	foodQuantity = 0;
 	q = new Queen(100, this);
 	entities = new EntityList();
-	entities->entity = (Entity *)q;
+	entities->entity = (ant *)q;
 	entities->next = NULL;
 }
 
-void Nest::AddEntity(Entity *entity)
+void Nest::AddEntity(ant *entity)
 {
 	EntityList *el = new EntityList();
 	el->entity = entity;
@@ -55,12 +55,12 @@ void Nest::clearEnemies(int amount) {
 		enemiesCount = 0;
 }
 
-void Nest::ReplaceLarvaWithNewEntity(Entity *larva, Entity *ent)
+void Nest::ReplaceLarvaWithNewEntity(ant *larva, ant *ent)
 {
 	EntityList *el = entities;
-	while (el != NULL && el->entity != larva)
+	while (el && el->entity != larva)
 	{
-		el->entity->Act();
+		el->entity->act();
 		el = el->next;
 	}
 }
@@ -70,11 +70,11 @@ void Nest::PassDay()
 	EntityList *el = entities;
 	while (el != NULL)
 	{
-		el->entity->Act();
+		el->entity->act();
 		el = el->next;
 	}
 
-	foodMax = (1 + overseerCount * overseerPower) * foodMaxPlain;
+	foodMax = (1.0 + overseerCount * overseerPower / 100) * foodMaxPlain;
 }
 
 Nest::~Nest()

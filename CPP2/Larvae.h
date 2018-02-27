@@ -1,16 +1,16 @@
 #pragma once
-#include "Entity.h"
+#include "ant.h"
 #include "Nest.h"
 #include "Queen.h"
 
-class Larvae : public Entity
+class larvae : public ant
 {
 private:
-	Queen * q;
-	int timeBeforeEvolving;
+	int time_before_evolving_;
+	int (*queen_api_)();
 public:
-	Larvae(int hunger, Queen *queen, Nest *nest);
-	void Act();
-	void Evolve();
+	larvae(int hunger, int(*queen_method)(), Nest *nest);
+	void act();
+	void evolve() const;
 };
 

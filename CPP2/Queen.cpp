@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "Queen.h"
 
-Queen::Queen(int hunger, Nest *nest) : Entity(hunger, nest)
+Queen::Queen(int hunger, Nest *nest) : ant(hunger)
 {
 	power = nest->getQueenInfo();
 
 }
 
-void Queen::AskForEvolve(Entity *larva)
+void Queen::AskForEvolve(ant *larva)
 {
 
 }

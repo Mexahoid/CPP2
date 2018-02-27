@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "Slave.h"
 
-Slave::Slave(int hunger, Nest *nest) : Entity(hunger, nest)
+slave::slave(const int hunger, const int power) : ant(hunger)
 {
-	power = nest->getSlaveInfo();
+	power_ = power;
 }
 
-void Slave::Act()
+void slave::act(Nest *nest) const
 {
-	nest->UseResources(hunger);
-	nest->AddResources(power);
+	ant::act(nest);
+	nest->AddResources(power_);
 }

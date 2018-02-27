@@ -1,6 +1,6 @@
 #pragma once
 #include "Entities.h"
-#include "Entity.h"
+#include "ant.h"
 #include "Queen.h"
 #include "Larvae.h"
 #include "Soldier.h"
@@ -12,13 +12,15 @@ const int OVERSEER_HUNGER = 50;
 const int SLAVE_HUNGER = 25;
 const int LARVA_HUNGER = 10;
 
+const int LARVAE_TIME = 15;
+
 typedef struct EntityList {
-	Entity *entity;
+	ant *entity;
 	EntityList *next;
 } EntityList;
 
 
-extern class Nest
+ class Nest
 {
 private:
 	Queen * q;
@@ -32,7 +34,7 @@ private:
 
 	int queenPower;
 	int soldierPower;
-	double overseerPower;
+	int overseerPower;
 	int slavePower;
 
 	int soldierCount;
@@ -42,7 +44,7 @@ private:
 
 public:
 	Nest(int max);
-	void AddEntity(Entity *entity);
+	void AddEntity(ant *entity);
 	void UseResources(int count);
 	void AddResources(int count);
 	int getSlaveInfo();
@@ -50,7 +52,7 @@ public:
 	int getOverseerInfo();
 	int getQueenInfo();
 	void clearEnemies(int amount);
-	void ReplaceLarvaWithNewEntity(Entity *larva, Entity *ent);
+	void ReplaceLarvaWithNewEntity(ant *larva, ant *ent);
 	void PassDay();
 	~Nest();
 };

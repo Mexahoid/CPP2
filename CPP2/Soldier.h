@@ -2,7 +2,7 @@
 #include "Entities.h"
 #include "Nest.h"
 
-class Soldier : public Entity
+class Soldier : public ant
 {
 private:
 	int power;

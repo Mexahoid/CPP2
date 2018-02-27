@@ -2,11 +2,11 @@
 #include "Entity.h"
 #include "Nest.h"
 
-class Slave : public Entity
+class slave : public ant
 {
 private:
-	int power;
+	int power_;
 public:
-	Slave(int hunger, Nest *nest);
-	void Act();
+	slave(int hunger, int power);
+	void act(Nest *nest) const;
 };
