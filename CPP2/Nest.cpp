@@ -13,6 +13,14 @@ Nest::Nest(int max)
 	entities->next = NULL;
 }
 
+void Nest::overseer_increase(int power)
+{
+}
+
+void Nest::overseer_decrease(int power)
+{
+}
+
 void Nest::AddEntity(ant *entity)
 {
 	EntityList *el = new EntityList();

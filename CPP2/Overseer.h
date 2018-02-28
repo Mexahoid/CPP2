@@ -4,7 +4,7 @@
 class overseer : public ant
 {
 public:
-	overseer(int hunger, Nest *nest);
+	overseer(int hunger, int health, Nest *nest);
 	~overseer();
 };
 

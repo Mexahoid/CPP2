@@ -20,7 +20,7 @@ typedef struct EntityList {
 } EntityList;
 
 
- class Nest
+class Nest
 {
 private:
 	Queen * q;
@@ -44,6 +44,8 @@ private:
 
 public:
 	Nest(int max);
+	void overseer_increase(int power);
+	void overseer_decrease(int power);
 	void AddEntity(ant *entity);
 	void UseResources(int count);
 	void AddResources(int count);

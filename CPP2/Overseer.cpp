@@ -2,9 +2,9 @@
 #include "Overseer.h"
 
 
-overseer::overseer(const int hunger, Nest *nest) : ant(hunger, nest)
+overseer::overseer(const int hunger, const int health, Nest *nest) : ant(hunger, health, nest)
 {
-
+	nest->overseer_increase(power);
 }
 
 overseer::~overseer()

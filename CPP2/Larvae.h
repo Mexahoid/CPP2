@@ -7,10 +7,10 @@ class larvae : public ant
 {
 private:
 	int time_before_evolving_;
-	int (*queen_api_)();
+	int (*ask_queen_for_evolving_)();
 public:
-	larvae(int hunger, int(*queen_method)(), Nest *nest);
+	larvae(int hunger, int health, int(*queen_method)(), Nest *nest);
 	void act();
-	void evolve() const;
+	void evolve();
 };
 

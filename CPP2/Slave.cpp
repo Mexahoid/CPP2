@@ -8,6 +8,6 @@ slave::slave(const int hunger, const int power) : ant(hunger)
 
 void slave::act(Nest *nest) const
 {
-	ant::act(nest);
+	ant::act();
 	nest->AddResources(power_);
 }
