@@ -3,7 +3,7 @@
 #include "Nest.h"
 
 
-larvae::larvae(const int hunger, const int health, int (*queen_method)(), Nest *nest) : ant(hunger, health, nest)
+larvae::larvae(const int hunger, const int health, int (*queen_method)(), nest *nest) : ant(hunger, health, nest)
 {
 	ask_queen_for_evolving_ = queen_method;
 	time_before_evolving_ = LARVAE_TIME;

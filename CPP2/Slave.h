@@ -8,5 +8,5 @@ private:
 	int power_;
 public:
 	slave(int hunger, int power);
-	void act(Nest *nest) const;
+	void act(nest *nest) const;
 };

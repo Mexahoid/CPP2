@@ -2,7 +2,7 @@
 #include "ant.h"
 #include "Nest.h"
 
-ant::ant(const int hunger, const int health, Nest *nest)
+ant::ant(const int hunger, const int health, nest *nest)
 {
 	this->nest_ = nest;
 	this->hunger_ = hunger;

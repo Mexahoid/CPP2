@@ -6,8 +6,8 @@
 
 class ant;
 class Queen;
-class Soldier;
+class soldier;
 class overseer;
 class slave;
 class Larva;
-class Nest;
+class nest;

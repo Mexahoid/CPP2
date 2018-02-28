@@ -7,7 +7,7 @@ class Queen : public ant
 private:
 	int power;
 public:
-	Queen(int hunger, Nest *nest);
+	Queen(int hunger, nest *nest);
 	void AskForEvolve(ant *larva);
 };
 

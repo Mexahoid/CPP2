@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "Soldier.h"
 
-Soldier::Soldier(int hunger, Nest *nest) : ant(hunger, nest)
+soldier::soldier(const int hunger, const int health, nest *nest) : ant(hunger, health, nest)
 {
-	power = nest->getSoldierInfo();
+	power_ = nest_->getSoldierInfo();
 }
 
-void Soldier::Act()
+void soldier::act() const
 {
-	nest->UseResources(hunger);
-	nest->clearEnemies(power);
+	nest_->UseResources(hunger_);
+	nest_->clearEnemies(power_);
 }

@@ -2,7 +2,7 @@
 #include "Nest.h"
 
 
-Nest::Nest(int max)
+nest::nest(int max)
 {
 	foodMaxPlain = max;
 	foodMax = max;
@@ -13,15 +13,15 @@ Nest::Nest(int max)
 	entities->next = NULL;
 }
 
-void Nest::overseer_increase(int power)
+void nest::overseer_increase(int power)
 {
 }
 
-void Nest::overseer_decrease(int power)
+void nest::overseer_decrease(int power)
 {
 }
 
-void Nest::AddEntity(ant *entity)
+void nest::AddEntity(ant *entity)
 {
 	EntityList *el = new EntityList();
 	el->entity = entity;
@@ -29,41 +29,41 @@ void Nest::AddEntity(ant *entity)
 	entities = el;
 }
 
-void Nest::UseResources(int count)
+void nest::UseResources(int count)
 {
 	foodQuantity -= count;
 }
 
-void Nest::AddResources(int count)
+void nest::AddResources(int count)
 {
 	foodQuantity += count;
 	if (foodQuantity > foodMax)
 		foodQuantity = foodMax;
 }
 
-int Nest::getSlaveInfo() {
+int nest::getSlaveInfo() {
 	return slavePower;
 }
 
-int Nest::getSoldierInfo() {
+int nest::getSoldierInfo() {
 	return soldierPower;
 }
 
-int Nest::getOverseerInfo() {
+int nest::getOverseerInfo() {
 	return overseerPower;
 }
 
-int Nest::getQueenInfo() {
+int nest::getQueenInfo() {
 	return queenPower;
 }
 
-void Nest::clearEnemies(int amount) {
+void nest::clearEnemies(int amount) {
 	enemiesCount -= amount;
 	if (enemiesCount < 0)
 		enemiesCount = 0;
 }
 
-void Nest::ReplaceLarvaWithNewEntity(ant *larva, ant *ent)
+void nest::ReplaceLarvaWithNewEntity(ant *larva, ant *ent)
 {
 	EntityList *el = entities;
 	while (el && el->entity != larva)
@@ -73,7 +73,7 @@ void Nest::ReplaceLarvaWithNewEntity(ant *larva, ant *ent)
 	}
 }
 
-void Nest::PassDay()
+void nest::PassDay()
 {
 	EntityList *el = entities;
 	while (el != NULL)
@@ -85,7 +85,7 @@ void Nest::PassDay()
 	foodMax = (1.0 + overseerCount * overseerPower / 100) * foodMaxPlain;
 }
 
-Nest::~Nest()
+nest::~nest()
 {
 	delete(q);
 }

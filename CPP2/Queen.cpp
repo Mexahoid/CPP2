@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Queen.h"
 
-Queen::Queen(int hunger, Nest *nest) : ant(hunger)
+Queen::Queen(int hunger, nest *nest) : ant(hunger)
 {
 	power = nest->getQueenInfo();
 
