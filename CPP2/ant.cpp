@@ -42,3 +42,8 @@ void ant::heal()
 	if (health_ > max_health_)
 		health_ = heal_amount_;
 }
+
+int ant::get_health() const
+{
+	return health_;
+}

@@ -5,6 +5,7 @@
 
 typedef struct {
 	int day;
+	int queen_health;
 	int food_current;
 	int enemies_current;
 

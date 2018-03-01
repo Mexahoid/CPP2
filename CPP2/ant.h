@@ -20,5 +20,6 @@ public:
 	void hit(int amount);
 	char get_type() const;
 	void heal();
+	int get_health() const;
 };
 

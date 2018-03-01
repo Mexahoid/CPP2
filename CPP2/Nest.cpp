@@ -36,6 +36,7 @@ bool was_hit_successful()
 void print_data(const data_for_day dt)
 {
 	std::cout << "Day " << dt.day << std::endl;
+	std::cout << "Queen health: " << dt.queen_health << std::endl;
 	std::cout << "Food count: " << dt.food_current << std::endl;
 	std::cout << "Enemies count: " << dt.enemies_current << std::endl;
 	std::cout << "Soldiers count: "	<< dt.soldier_count << std::endl;
@@ -169,6 +170,7 @@ bool nest::pass_day()
 {
 	data_for_day dfd{
 		day_++,
+		entities_->entity->get_health(),
 		food_quantity_,
 		enemies_count_,
 		0, 0, 0, 0
