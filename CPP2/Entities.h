@@ -27,6 +27,7 @@ const int LARVAE_HEAL = LARVAE_HEALTH / 5;
 
 const int ENEMIES_INCOME_COUNT_MAX = 30;
 const int ENEMIES_POWER_MAX = 15;
+const int ENEMIES_HUNGER = 20;
 
 const int SOLDIER_MULT = 10;
 const int OVERSEER_MULT = 30;

@@ -199,6 +199,7 @@ bool nest::pass_day()
 		print_data(dfd);
 		return false;
 	}
+	use_resources(ENEMIES_HUNGER * enemies_count_);
 
 	while (el)
 	{
@@ -227,11 +228,6 @@ bool nest::pass_day()
 			break;
 		}
 		el->entity->act();
-		el = el->next;
-	}
-	el = entities_;
-	while (el)
-	{
 		if(enemies_count_ && was_hit_successful())
 			el->entity->hit(get_fair_enemy_power());
 		el = el->next;
