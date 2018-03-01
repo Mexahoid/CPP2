@@ -7,9 +7,11 @@ protected:
 	int hunger_;
 	nest *nest_;
 	int health_;
+	char type_;
 public:
 	explicit ant(int hunger, int health, nest *nest);
 	void act() const;
 	bool is_alive() const;
+	char get_type() const;
 };
 
