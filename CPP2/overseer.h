@@ -6,6 +6,7 @@ class overseer : public ant
 {
 public:
 	overseer(nest *nest);
+	void act() override;
 	~overseer();
 };
 
