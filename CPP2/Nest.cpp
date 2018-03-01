@@ -30,19 +30,30 @@ bool was_hit_successful()
 	srand(time(nullptr));
 	const auto hit_chance_threshold = rand() % 101;
 	const auto hit_chance = rand() % 101;
-	return hit_chance < hit_chance_threshold;
+	return hit_chance * 2 < hit_chance_threshold;
 }
 
 void print_data(const data_for_day dt)
 {
 	std::cout << "Day " << dt.day << std::endl;
-	std::cout << "Queen health: " << dt.queen_health << std::endl;
+	if(dt.queen_health > 0)
+		std::cout << "Queen health: " << dt.queen_health << std::endl;
+	else
+	{
+		std::cout << "Queen died due to: " << (dt.queen_health == -1 ? "starvation" : "enemies") << std::endl;
+	}
 	std::cout << "Food count: " << dt.food_current << std::endl;
+	if(dt.enemies_current > -1)
 	std::cout << "Enemies count: " << dt.enemies_current << std::endl;
+	if (dt.soldier_count > -1)
 	std::cout << "Soldiers count: "	<< dt.soldier_count << std::endl;
+	if (dt.overseer_count > -1)
 	std::cout << "Overseers count: " << dt.overseer_count << std::endl;
+	if (dt.slave_count > -1)
 	std::cout << "Slaves count: " << dt.slave_count << std::endl;
+	if (dt.larvae_count > -1)
 	std::cout << "Larvas count: " << dt.larvae_count << std::endl;
+
 	std::cout << "=============================" << std::endl;
 }
 
@@ -96,7 +107,7 @@ void init_starting(starting_numbers st, entity_list *el, nest *nest, queen *q)
 		}
 
 		entity_list *et = new entity_list();
-		et->entity = new larvae(q, nest);
+		et->entity = new larvae(q, nest, true);
 		et->next = nullptr;
 		p->next = et;
 	}
@@ -178,7 +189,16 @@ bool nest::pass_day()
 
 	entity_list *el = entities_;
 	if (!el->entity->is_alive())
+	{
+		dfd.queen_health = dynamic_cast<queen *>(el->entity)->get_death_reason() ? -1 : -2;
+		dfd.soldier_count = -1;
+		dfd.slave_count = -1;
+		dfd.overseer_count = -1;
+		dfd.larvae_count = -1;
+		dfd.enemies_current = -1;
+		print_data(dfd);
 		return false;
+	}
 
 	while (el)
 	{
@@ -212,7 +232,8 @@ bool nest::pass_day()
 	el = entities_;
 	while (el)
 	{
-		el->entity->hit(get_fair_enemy_power());
+		if(enemies_count_ && was_hit_successful())
+			el->entity->hit(get_fair_enemy_power());
 		el = el->next;
 	}
 	enemies_count_ += get_fair_enemy_count();

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "ant.h"
-#include "Nest.h"
+#include "nest.h"
 
 ant::ant(nest *nest, const entity_data ed)
 {
@@ -40,7 +40,7 @@ void ant::heal()
 {
 	health_ += heal_amount_;
 	if (health_ > max_health_)
-		health_ = heal_amount_;
+		health_ = max_health_;
 }
 
 int ant::get_health() const
