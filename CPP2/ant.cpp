@@ -2,16 +2,23 @@
 #include "ant.h"
 #include "Nest.h"
 
-ant::ant(const int hunger, const int health, nest *nest)
+ant::ant(nest *nest, const entity_data ed)
 {
 	this->nest_ = nest;
-	this->hunger_ = hunger;
-	this->health_ = health;
+	health_ = ed.health;
+	max_health_ = health_;
+	hunger_ = ed.hunger;
+	power_ = ed.power;
+	type_ = ed.type;
+	heal_amount_ = ed.healing;
 }
 
-void ant::act() const
+void ant::act()
 {
-	nest_->use_resources(hunger_);
+	if (nest_->use_resources(hunger_))
+		heal();
+	else
+		health_ -= heal_amount_ / 2;
 }
 
 bool ant::is_alive() const
@@ -19,7 +26,19 @@ bool ant::is_alive() const
 	return health_ > 0;
 }
 
+void ant::hit(const int amount)
+{
+	health_ -= amount;
+}
+
 char ant::get_type() const
 {
 	return type_;
+}
+
+void ant::heal()
+{
+	health_ += heal_amount_;
+	if (health_ > max_health_)
+		health_ = heal_amount_;
 }

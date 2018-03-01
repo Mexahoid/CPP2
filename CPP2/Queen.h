@@ -1,14 +1,17 @@
 #pragma once
-#include "ant.h"
+#include "entities.h"
+#include "soldier.h"
+#include "overseer.h"
+#include "slave.h"
+#include "larvae.h"
 #include "nest.h"
 
 class queen : public ant
 {
-private:
-	int power;
 public:
-	queen(int hunger, int health, nest *nest);
-	void AskForEvolve(ant *larva);
+	queen(nest *nest);
+	void ask_for_evolve() const;
+	void act() override;
 };
 
 

@@ -2,10 +2,8 @@
 #include "overseer.h"
 
 
-overseer::overseer(const int hunger, const int health, nest *nest) : ant(hunger, health, nest)
+overseer::overseer(nest *const nest) : ant(nest, nest->get_info(2))
 {
-	type_ = 2;
-	power_ = nest_->get_overseer_info();
 	nest_->overseer_increase(power_);
 }
 

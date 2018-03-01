@@ -1,24 +1,23 @@
 #include "stdafx.h"
 #include "larvae.h"
-#include "nest.h"
 
 
-larvae::larvae(const int hunger, const int health, int (*queen_method)(), nest *nest) : ant(hunger, health, nest)
+
+larvae::larvae(queen const *q, nest *const nest) : ant(nest, nest->get_info(4))
 {
-	ask_queen_for_evolving_ = queen_method;
-	time_before_evolving_ = LARVAE_TIME;
+	q_ = q;
 }
 
 void larvae::act()
 {
-	nest_->UseResources(hunger_);
-	time_before_evolving_--;
-	if (time_before_evolving_ == 0)
+	ant::act();
+	power_--;
+	if (power_ == 0)
 		evolve();
 }
 
 void larvae::evolve()
 {
-	ask_queen_for_evolving_();
+	q_->ask_for_evolve();
 	health_ = 0;
 }
