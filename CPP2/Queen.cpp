@@ -1,13 +1,12 @@
 #include "stdafx.h"
-#include "Queen.h"
+#include "queen.h"
 
-Queen::Queen(int hunger, nest *nest) : ant(hunger)
+queen::queen(const int hunger, const int health, nest *nest) : ant(hunger, health, nest)
 {
-	power = nest->getQueenInfo();
-
+	power = nest_->getQueenInfo();
 }
 
-void Queen::AskForEvolve(ant *larva)
+void queen::AskForEvolve(ant *larva)
 {
 
 }

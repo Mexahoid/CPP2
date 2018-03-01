@@ -1,6 +1,6 @@
 #pragma once
-#include "Entities.h"
-#include "Nest.h"
+#include "entities.h"
+#include "nest.h"
 
 class soldier : public ant
 {

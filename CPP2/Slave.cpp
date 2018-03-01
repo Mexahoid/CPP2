@@ -1,13 +1,13 @@
 #include "stdafx.h"
-#include "Slave.h"
+#include "slave.h"
 
-slave::slave(const int hunger, const int power) : ant(hunger)
+slave::slave(const int hunger, const int health, nest *nest) : ant(hunger, health, nest)
 {
-	power_ = power;
+	power_ = nest_->getSlaveInfo();
 }
 
-void slave::act(nest *nest) const
+void slave::act() const
 {
 	ant::act();
-	nest->AddResources(power_);
+	nest_->AddResources(power_);
 }

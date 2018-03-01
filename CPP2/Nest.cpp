@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Nest.h"
+#include "nest.h"
 
 
 nest::nest(int max)
@@ -7,7 +7,7 @@ nest::nest(int max)
 	foodMaxPlain = max;
 	foodMax = max;
 	foodQuantity = 0;
-	q = new Queen(100, this);
+	q = new queen(100, 1000, this);
 	entities = new EntityList();
 	entities->entity = (ant *)q;
 	entities->next = NULL;

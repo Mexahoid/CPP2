@@ -1,7 +1,7 @@
 #pragma once
 #include "ant.h"
-#include "Nest.h"
-#include "Queen.h"
+#include "nest.h"
+#include "queen.h"
 
 class larvae : public ant
 {

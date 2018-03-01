@@ -1,12 +1,12 @@
 #pragma once
-#include "Entity.h"
-#include "Nest.h"
+#include "ant.h"
+#include "nest.h"
 
 class slave : public ant
 {
 private:
 	int power_;
 public:
-	slave(int hunger, int power);
-	void act(nest *nest) const;
+	slave(int hunger, int health, nest *nest);
+	void act() const;
 };

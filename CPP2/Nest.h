@@ -1,10 +1,10 @@
 #pragma once
-#include "Entities.h"
+#include "entities.h"
 #include "ant.h"
-#include "Queen.h"
-#include "Larvae.h"
-#include "Soldier.h"
-#include "Slave.h"
+#include "queen.h"
+#include "larvae.h"
+#include "soldier.h"
+#include "slave.h"
 
 const int QUEEN_HUNGER = 1000;
 const int SOLDIER_HUNGER = 100;
@@ -23,7 +23,7 @@ typedef struct EntityList {
 class nest
 {
 private:
-	Queen * q;
+	queen * q;
 	EntityList *entities;
 	int foodQuantity;
 

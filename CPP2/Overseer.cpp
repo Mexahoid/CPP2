@@ -1,10 +1,10 @@
 #include "stdafx.h"
-#include "Overseer.h"
+#include "overseer.h"
 
 
 overseer::overseer(const int hunger, const int health, nest *nest) : ant(hunger, health, nest)
 {
-	nest->overseer_increase(power);
+	nest_->overseer_increase(power_);
 }
 
 overseer::~overseer()

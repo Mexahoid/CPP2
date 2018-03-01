@@ -1,13 +1,13 @@
 #pragma once
 #include "ant.h"
-#include "Nest.h"
+#include "nest.h"
 
-class Queen : public ant
+class queen : public ant
 {
 private:
 	int power;
 public:
-	Queen(int hunger, nest *nest);
+	queen(int hunger, int health, nest *nest);
 	void AskForEvolve(ant *larva);
 };
 

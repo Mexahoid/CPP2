@@ -5,9 +5,9 @@
 
 
 class ant;
-class Queen;
+class queen;
 class soldier;
 class overseer;
 class slave;
-class Larva;
+class larvae;
 class nest;

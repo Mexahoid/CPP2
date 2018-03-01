@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "Larvae.h"
-#include "Nest.h"
+#include "larvae.h"
+#include "nest.h"
 
 
 larvae::larvae(const int hunger, const int health, int (*queen_method)(), nest *nest) : ant(hunger, health, nest)

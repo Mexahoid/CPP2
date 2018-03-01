@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Soldier.h"
+#include "soldier.h"
 
 soldier::soldier(const int hunger, const int health, nest *nest) : ant(hunger, health, nest)
 {
