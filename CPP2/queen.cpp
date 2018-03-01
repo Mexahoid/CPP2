@@ -8,12 +8,12 @@ queen::queen(nest *const nest) : ant(nest, nest->get_info(0))
 void queen::ask_for_evolve() const
 {
 	char type = 1;
-	int percentage[] = { 0, 0, 0};
+	double percentage[] = { 0, 0, 0};
 	for (type = 0; type < 3; type++)
 	{
 		percentage[type] = nest_->get_percentage(type + 1);
 	}
-	int min = WCHAR_MAX;
+	double min = 0xffffffff;
 	char lesser_type = 1;
 	for (type = 0; type < 3; type++)
 	{
