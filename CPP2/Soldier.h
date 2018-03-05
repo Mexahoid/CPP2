@@ -7,4 +7,5 @@ class soldier : public ant
 public:
 	soldier(nest *nest);
 	void act() override;
+	static int get_revealing_chance();
 };

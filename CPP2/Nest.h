@@ -1,5 +1,6 @@
 #pragma once
 #include "entities.h"
+#include "enemy.h"
 #include "ant.h"
 #include "queen.h"
 
@@ -30,6 +31,7 @@ typedef struct
 class nest
 {
 	entity_list *entities_;
+	enemy_list *enemies_;
 	entity_data infos_[5];
 
 	int food_quantity_;

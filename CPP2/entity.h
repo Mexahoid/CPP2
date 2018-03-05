@@ -7,6 +7,8 @@ protected:
 	int hunger_;
 	int heal_amount_;
 public:
+	virtual ~entity() = default;
+	entity();
 	entity(int health, int hunger, int healing);
 	virtual void hit(int damage);
 	virtual void heal();

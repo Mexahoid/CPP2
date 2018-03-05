@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "soldier.h"
+#include <cstdlib>
+#include <ctime>
 
 soldier::soldier(nest *const nest) : ant(nest, nest->get_info(1))
 {
@@ -14,3 +16,8 @@ void soldier::act()
 	nest_->clear_enemies(power_, &health_);
 }
 
+int soldier::get_revealing_chance()
+{
+	srand(time(nullptr));
+	return rand() % 101;
+}

@@ -2,6 +2,14 @@
 #include "entity.h"
 
 
+entity::entity()
+{
+	hunger_ = 0;
+	max_health_ = 0;
+	health_ = 0;
+	heal_amount_ = 0;
+}
+
 entity::entity(const int health, const int hunger, const int healing)
 {
 	hunger_ = hunger;

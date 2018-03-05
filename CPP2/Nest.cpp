@@ -13,12 +13,6 @@ void init_infos(entity_data *infos)
 	infos[4] = { LARVAE_HEALTH, LARVAE_HUNGER, LARVAE_TIME, 4, LARVAE_HEAL };
 }
 
-int get_fair_enemy_count()
-{
-	srand(time(nullptr));
-	return rand() % ENEMIES_INCOME_COUNT_MAX;
-}
-
 int get_fair_enemy_power()
 {
 	srand(time(nullptr));
@@ -32,6 +26,14 @@ bool was_hit_successful(const bool is_enemy)
 	const auto hit_chance = rand() % 101;
 	const int mult = is_enemy ? 1 : 3;
 	return hit_chance * mult > hit_chance_threshold;
+}
+
+bool decrease_quantity(int amount, int *value)
+{
+	if (*value < amount)
+		return false;
+	*value -= amount;
+	return true;
 }
 
 void print_data(const data_for_day dt)
@@ -116,6 +118,26 @@ void init_starting(const starting_numbers st, entity_list *el, nest *nest, queen
 	}
 }
 
+int incr_enemies(enemy_list *list)
+{
+	enemy_list *el = list;
+	while(el->next)
+	{
+		el = el->next;
+	}
+	srand(time(nullptr));
+	const int count = rand() % ENEMIES_INCOME_COUNT_MAX;
+	for (int i = 0; i < count; i++)
+	{
+		enemy_list *enm = new enemy_list();
+		enm->enemy = new enemy();
+		enm->next = nullptr;
+		el->next = enm;
+		el = el->next;
+	}
+	return count;
+}
+
 nest::nest(const starting_numbers numbers)
 {
 	init_infos(infos_);
@@ -143,10 +165,7 @@ void nest::overseer_decrease(const int power)
 
 bool nest::use_resources(const int count)
 {
-	if (food_quantity_ < count)
-		return false;
-	food_quantity_ -= count;
-	return true;
+	return decrease_quantity(count, &food_quantity_);
 }
 
 void nest::add_resources(const int count)
@@ -210,13 +229,11 @@ bool nest::pass_day()
 		0, 0, 0, 0
 	};
 
-	enemies_count_ += get_fair_enemy_count();
+	enemies_count_ += incr_enemies(enemies_);  // Сас
 
 	dfd.enemies_at_day_start = enemies_count_;
 
 	entity_list *el = entities_;
-
-
 	if (!el->entity->is_alive())
 	{
 		dfd.queen_health = dynamic_cast<queen *>(el->entity)->get_death_reason() ? -1 : -2;
@@ -229,6 +246,17 @@ bool nest::pass_day()
 		print_data(dfd);
 		return false;
 	}
+
+	enemy_list *enl = enemies_;
+	// int revealing_chance
+	while(enl)
+	{
+		int reveal_chance = enl->enemy->get_reveal_chance();
+
+		enl->enemy->use_res(&food_quantity_);
+		enl = enl->next;
+	}
+
 	use_resources(ENEMIES_HUNGER * enemies_count_);
 
 	while (el)

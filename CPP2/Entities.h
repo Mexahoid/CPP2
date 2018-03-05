@@ -50,6 +50,11 @@ typedef struct entity_list {
 	entity_list *next;
 } entity_list;
 
+typedef struct enemy_list {
+	enemy *enemy;
+	enemy_list *next;
+} enemy_list;
+
 typedef struct entity_data
 {
 	int health;
