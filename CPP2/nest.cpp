@@ -6,7 +6,7 @@
 
 void init_infos(entity_data *infos)
 {
-	infos[0] = { QUEEN_HEALTH, QUEEN_HUNGER, QUEEN_POWER, 0, QUEEN_HEAL};
+	infos[0] = { QUEEN_HEALTH, QUEEN_HUNGER, QUEEN_POWER, 0, QUEEN_HEAL };
 	infos[1] = { SOLDIER_HEALTH, SOLDIER_HUNGER, SOLDIER_POWER, 1, SOLDIER_HEAL };
 	infos[2] = { OVERSEER_HEALTH, OVERSEER_HUNGER, OVERSEER_POWER, 2, OVERSEER_HEAL };
 	infos[3] = { SLAVE_HEALTH, SLAVE_HUNGER, SLAVE_POWER, 3, SLAVE_HEAL };
@@ -25,44 +25,47 @@ int get_fair_enemy_power()
 	return rand() % ENEMIES_POWER_MAX;
 }
 
-bool was_hit_successful()
+bool was_hit_successful(const bool is_enemy)
 {
 	srand(time(nullptr));
 	const auto hit_chance_threshold = rand() % 101;
 	const auto hit_chance = rand() % 101;
-	return hit_chance * 2 < hit_chance_threshold;
+	const int mult = is_enemy ? 1 : 3;
+	return hit_chance * mult > hit_chance_threshold;
 }
 
 void print_data(const data_for_day dt)
 {
 	std::cout << "Day " << dt.day << std::endl;
-	if(dt.queen_health > 0)
+	if (dt.queen_health > 0)
 		std::cout << "Queen health: " << dt.queen_health << std::endl;
 	else
 	{
 		std::cout << "Queen died due to: " << (dt.queen_health == -1 ? "starvation" : "enemies") << std::endl;
 	}
 	std::cout << "Food count: " << dt.food_current << std::endl;
-	if(dt.enemies_current > -1)
-	std::cout << "Enemies count: " << dt.enemies_current << std::endl;
+	if (dt.enemies_at_day_start > -1)
+		std::cout << "Enemies at start: " << dt.enemies_at_day_start << std::endl;
+	if (dt.enemies_current > -1)
+		std::cout << "Enemies count: " << dt.enemies_current << std::endl;
 	if (dt.soldier_count > -1)
-	std::cout << "Soldiers count: "	<< dt.soldier_count << std::endl;
+		std::cout << "Soldiers count: " << dt.soldier_count << std::endl;
 	if (dt.overseer_count > -1)
-	std::cout << "Overseers count: " << dt.overseer_count << std::endl;
+		std::cout << "Overseers count: " << dt.overseer_count << std::endl;
 	if (dt.slave_count > -1)
-	std::cout << "Slaves count: " << dt.slave_count << std::endl;
+		std::cout << "Slaves count: " << dt.slave_count << std::endl;
 	if (dt.larvae_count > -1)
-	std::cout << "Larvas count: " << dt.larvae_count << std::endl;
+		std::cout << "Larvas count: " << dt.larvae_count << std::endl;
 
 	std::cout << "=============================" << std::endl;
 }
 
-void init_starting(starting_numbers st, entity_list *el, nest *nest, queen *q)
+void init_starting(const starting_numbers st, entity_list *el, nest *nest, queen *q)
 {
 	entity_list *p = el;
 	for (int i = 0; i < st.soldier_count; i++)
 	{
-		while(p->next)
+		while (p->next)
 		{
 			p = p->next;
 		}
@@ -158,10 +161,29 @@ entity_data nest::get_info(const char type) const
 	return infos_[type];
 }
 
-void nest::clear_enemies(const int amount) {
-	enemies_count_ -= amount;
-	if (enemies_count_ < 0)
-		enemies_count_ = 0;
+void nest::clear_enemies(const int soldier_power, int *health) {
+
+	if (enemies_count_ != 0)
+		for (int i = 0; i < enemies_per_soldier_; i++)
+		{
+			if (was_hit_successful(true))
+			{
+				const int enemy_power = get_fair_enemy_power();
+				if (enemy_power > soldier_power)
+					*health -= enemy_power;
+			}
+			if (*health < 1)
+				return;
+			if (was_hit_successful(false))
+			{
+				enemies_count_--;
+				if (enemies_count_ < 0)
+				{
+					enemies_count_ = 0;
+					break;
+				}
+			}
+		}
 }
 
 void nest::add_new_ant(ant *ent) const
@@ -184,16 +206,24 @@ bool nest::pass_day()
 		entities_->entity->get_health(),
 		food_quantity_,
 		enemies_count_,
+		enemies_count_,
 		0, 0, 0, 0
 	};
 
+	enemies_count_ += get_fair_enemy_count();
+
+	dfd.enemies_at_day_start = enemies_count_;
+
 	entity_list *el = entities_;
+
+
 	if (!el->entity->is_alive())
 	{
 		dfd.queen_health = dynamic_cast<queen *>(el->entity)->get_death_reason() ? -1 : -2;
 		dfd.soldier_count = -1;
 		dfd.slave_count = -1;
 		dfd.overseer_count = -1;
+		dfd.enemies_at_day_start = -1;
 		dfd.larvae_count = -1;
 		dfd.enemies_current = -1;
 		print_data(dfd);
@@ -203,7 +233,18 @@ bool nest::pass_day()
 
 	while (el)
 	{
-		if(el->next && !el->next->entity->is_alive())
+		if (el->entity->get_type() == 1)
+			dfd.soldier_count++;
+		el = el->next;
+	}
+
+	if(dfd.soldier_count)
+		enemies_per_soldier_ = enemies_count_ / dfd.soldier_count + 1;
+
+	el = entities_;
+	while (el)
+	{
+		if (el->next && !el->next->entity->is_alive())
 		{
 			entity_list *d = el->next;
 			el->next = el->next->next;
@@ -212,9 +253,6 @@ bool nest::pass_day()
 		}
 		switch (el->entity->get_type())
 		{
-		case 1:
-			dfd.soldier_count++;
-			break;
 		case 2:
 			dfd.overseer_count++;
 			break;
@@ -228,11 +266,11 @@ bool nest::pass_day()
 			break;
 		}
 		el->entity->act();
-		if(enemies_count_ && was_hit_successful())
+		if (enemies_count_ && was_hit_successful(false))
 			el->entity->hit(get_fair_enemy_power());
 		el = el->next;
 	}
-	enemies_count_ += get_fair_enemy_count();
+	dfd.enemies_current = enemies_count_;
 	print_data(dfd);
 	return true;
 }

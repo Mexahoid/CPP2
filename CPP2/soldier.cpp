@@ -11,6 +11,6 @@ void soldier::act()
 	if (health_ < 1)
 		return;
 	nest_->use_resources(hunger_);
-	nest_->clear_enemies(power_);
+	nest_->clear_enemies(power_, &health_);
 }
 
