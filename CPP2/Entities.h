@@ -25,8 +25,9 @@ const int LARVAE_HUNGER = LARVAE_HEALTH * 2;
 const int LARVAE_TIME = LARVAE_HEALTH * 2;
 const int LARVAE_HEAL = LARVAE_HEALTH / 5;
 
-const int ENEMIES_INCOME_COUNT_MAX = 30;
-const int ENEMIES_POWER_MAX = 15;
+const int ENEMIES_INCOME_COUNT_MAX = 20;
+const int ENEMIES_HEALTH_MAX = 20;
+const int ENEMIES_POWER_MAX = 35;
 const int ENEMIES_HUNGER = 20;
 
 const int SOLDIER_MULT = 10;
@@ -40,6 +41,8 @@ class overseer;
 class slave;
 class larvae;
 class nest;
+class entity;
+class enemy;
 
 
 typedef struct entity_list {

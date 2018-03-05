@@ -147,8 +147,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="enemy.h" />
     <ClInclude Include="entities.h" />
     <ClInclude Include="ant.h" />
+    <ClInclude Include="entity.h" />
     <ClInclude Include="larvae.h" />
     <ClInclude Include="overseer.h" />
     <ClInclude Include="queen.h" />
@@ -161,6 +163,8 @@
   <ItemGroup>
     <ClCompile Include="CPP2.cpp" />
     <ClCompile Include="ant.cpp" />
+    <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="entity.cpp" />
     <ClCompile Include="larvae.cpp" />
     <ClCompile Include="overseer.cpp" />
     <ClCompile Include="queen.cpp" />
