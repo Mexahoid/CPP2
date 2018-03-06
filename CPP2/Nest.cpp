@@ -130,6 +130,7 @@ void init_starting(const starting_numbers st, ant_list *el, nest *nest, queen *q
 nest::nest(const starting_numbers numbers)
 {
 	init_infos(infos_);
+	enemies_ = new enemy_list();
 	food_max_default_ = numbers.food_max;
 	food_max_ = numbers.food_max;
 	food_quantity_ = numbers.food_current;
