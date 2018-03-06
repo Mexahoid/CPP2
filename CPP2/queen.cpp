@@ -5,18 +5,13 @@
 
 queen::queen(nest *const nest) : ant(nest, nest->get_info(0))
 {
-}
-
-int get_spawning_amount(const int power)
-{
-	srand(time(nullptr));
-	return rand() % power;
+	turned_ = false;
 }
 
 void queen::ask_for_evolve() const
 {
 	char type = 1;
-	double percentage[] = { 0, 0, 0};
+	double percentage[] = { 0, 0, 0 };
 	for (type = 0; type < 3; type++)
 	{
 		percentage[type] = nest_->get_percentage(type + 1);
@@ -54,19 +49,49 @@ void queen::ask_for_evolve() const
 
 void queen::act()
 {
-	ant::act();
-	if(health_ < 1)
+	// Если ее загрызли
+	if (health_ < 1)
 	{
-		death_reason_ = true;
+		death_reason_ = false;
+		return;
 	}
 
-	if (nest_->get_percentage(4) > 0.3)
-		return;
-	const int spawning = get_spawning_amount(power_);
-	for (int i = 0; i < spawning; i++)
+	// Сначала попробовать поесть
+	if (!turned_)
+		ant::act();
+	
+	// Вдруг сразу не хватило еды, надо подохнуть
+	if (health_ < 1)
 	{
-		larvae *lv = new larvae(this, nest_, false);
-		nest_->add_new_ant(lv);
+		death_reason_ = true;
+		return;
+	}
+
+	// Если повернута, но ХП не полное 
+	// для второй мейн фазы
+	if (turned_ && health_ <= max_health_ - heal_amount_)
+		ant::act();
+
+	// Если личинок уже больше 30%, то повернуться и выйти
+	// Т.е. если в первой мейн фазе спавнить не нужно
+	if (nest_->get_percentage(4) > 0.3)
+	{
+		turned_ = true;
+		return;
+	}
+
+	// Если личинок меньше и она не повернута
+	// Может сработать как в первой, так и во второй мейн фазе
+	if (!turned_)
+	{
+		srand(time(nullptr));
+		const int spawning = rand() % power_;
+		for (int i = 0; i < spawning; i++)
+		{
+			larvae *lv = new larvae(this, nest_, false);
+			nest_->add_new_ant(lv);
+		}
+		turned_ = true;
 	}
 }
 
