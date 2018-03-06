@@ -21,3 +21,9 @@ int soldier::get_revealing_chance()
 	srand(time(nullptr));
 	return rand() % 101;
 }
+
+void soldier::hit_enemy(enemy* enemy) const
+{
+	enemy->hit(power_);
+}
+

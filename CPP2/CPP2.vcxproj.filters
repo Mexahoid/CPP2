@@ -51,6 +51,18 @@
     <ClInclude Include="entity.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="world.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="consts.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="main_entities.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -86,5 +98,13 @@
     <ClCompile Include="entity.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="world.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="CPP2.rc">
+      <Filter>Файлы ресурсов</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

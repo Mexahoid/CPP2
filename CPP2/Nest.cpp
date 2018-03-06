@@ -4,7 +4,8 @@
 #include <ctime>
 #include <iostream>
 
-void init_infos(entity_data *infos)
+
+void init_infos(ant_data *infos)
 {
 	infos[0] = { QUEEN_HEALTH, QUEEN_HUNGER, QUEEN_POWER, 0, QUEEN_HEAL };
 	infos[1] = { SOLDIER_HEALTH, SOLDIER_HUNGER, SOLDIER_POWER, 1, SOLDIER_HEAL };
@@ -13,11 +14,6 @@ void init_infos(entity_data *infos)
 	infos[4] = { LARVAE_HEALTH, LARVAE_HUNGER, LARVAE_TIME, 4, LARVAE_HEAL };
 }
 
-int get_fair_enemy_power()
-{
-	srand(time(nullptr));
-	return rand() % ENEMIES_POWER_MAX;
-}
 
 bool was_hit_successful(const bool is_enemy)
 {
@@ -26,6 +22,20 @@ bool was_hit_successful(const bool is_enemy)
 	const auto hit_chance = rand() % 101;
 	const int mult = is_enemy ? 1 : 3;
 	return hit_chance * mult > hit_chance_threshold;
+}
+
+void fight(entity *victim, enemy *enemy)
+{
+	
+	if(was_hit_successful(true))
+	{
+		enemy->hit_another(victim);
+	}
+
+	if(static_cast<ant *>(victim)->get_type() == 1 && was_hit_successful(false))
+	{
+		static_cast<soldier *>(victim)->hit_enemy(enemy);
+	}
 }
 
 bool decrease_quantity(int amount, int *value)
@@ -46,8 +56,6 @@ void print_data(const data_for_day dt)
 		std::cout << "Queen died due to: " << (dt.queen_health == -1 ? "starvation" : "enemies") << std::endl;
 	}
 	std::cout << "Food count: " << dt.food_current << std::endl;
-	if (dt.enemies_at_day_start > -1)
-		std::cout << "Enemies at start: " << dt.enemies_at_day_start << std::endl;
 	if (dt.enemies_current > -1)
 		std::cout << "Enemies count: " << dt.enemies_current << std::endl;
 	if (dt.soldier_count > -1)
@@ -62,9 +70,9 @@ void print_data(const data_for_day dt)
 	std::cout << "=============================" << std::endl;
 }
 
-void init_starting(const starting_numbers st, entity_list *el, nest *nest, queen *q)
+void init_starting(const starting_numbers st, ant_list *el, nest *nest, queen *q)
 {
-	entity_list *p = el;
+	ant_list *p = el;
 	for (int i = 0; i < st.soldier_count; i++)
 	{
 		while (p->next)
@@ -72,7 +80,7 @@ void init_starting(const starting_numbers st, entity_list *el, nest *nest, queen
 			p = p->next;
 		}
 
-		entity_list *et = new entity_list();
+		ant_list *et = new ant_list();
 		et->entity = new soldier(nest);
 		et->next = nullptr;
 		p->next = et;
@@ -85,7 +93,7 @@ void init_starting(const starting_numbers st, entity_list *el, nest *nest, queen
 			p = p->next;
 		}
 
-		entity_list *et = new entity_list();
+		ant_list *et = new ant_list();
 		et->entity = new overseer(nest);
 		et->next = nullptr;
 		p->next = et;
@@ -98,7 +106,7 @@ void init_starting(const starting_numbers st, entity_list *el, nest *nest, queen
 			p = p->next;
 		}
 
-		entity_list *et = new entity_list();
+		ant_list *et = new ant_list();
 		et->entity = new slave(nest);
 		et->next = nullptr;
 		p->next = et;
@@ -111,32 +119,13 @@ void init_starting(const starting_numbers st, entity_list *el, nest *nest, queen
 			p = p->next;
 		}
 
-		entity_list *et = new entity_list();
+		ant_list *et = new ant_list();
 		et->entity = new larvae(q, nest, true);
 		et->next = nullptr;
 		p->next = et;
 	}
 }
 
-int incr_enemies(enemy_list *list)
-{
-	enemy_list *el = list;
-	while(el->next)
-	{
-		el = el->next;
-	}
-	srand(time(nullptr));
-	const int count = rand() % ENEMIES_INCOME_COUNT_MAX;
-	for (int i = 0; i < count; i++)
-	{
-		enemy_list *enm = new enemy_list();
-		enm->enemy = new enemy();
-		enm->next = nullptr;
-		el->next = enm;
-		el = el->next;
-	}
-	return count;
-}
 
 nest::nest(const starting_numbers numbers)
 {
@@ -146,7 +135,7 @@ nest::nest(const starting_numbers numbers)
 	food_quantity_ = numbers.food_current;
 
 	queen * q = new queen(this);
-	entities_ = new entity_list();
+	entities_ = new ant_list();
 	entities_->entity = static_cast<ant *>(q);
 	entities_->next = nullptr;
 
@@ -175,7 +164,7 @@ void nest::add_resources(const int count)
 		food_quantity_ = food_max_;
 }
 
-entity_data nest::get_info(const char type) const
+ant_data nest::get_info(const char type) const
 {
 	return infos_[type];
 }
@@ -205,14 +194,35 @@ void nest::clear_enemies(const int soldier_power, int *health) {
 		}
 }
 
+void nest::clear_enemies(soldier* sold) const
+{
+	if (enemies_count_ != 0)
+	{
+		enemy_list *el = enemies_;
+		for (int i = 0; i < enemies_per_soldier_; i++)
+		{
+			while(el && el->enemy->is_turned())
+			{
+				el = el->next;
+			}
+			if (el)
+			{
+				fight(sold, el->enemy);
+			}
+			else
+				return;
+		}
+	}
+}
+
 void nest::add_new_ant(ant *ent) const
 {
-	entity_list *el = entities_;
+	ant_list *el = entities_;
 	while (el->next)
 	{
 		el = el->next;
 	}
-	entity_list *nel = new entity_list();
+	ant_list *nel = new ant_list();
 	nel->entity = ent;
 	nel->next = nullptr;
 	el->next = nel;
@@ -225,22 +235,18 @@ bool nest::pass_day()
 		entities_->entity->get_health(),
 		food_quantity_,
 		enemies_count_,
-		enemies_count_,
 		0, 0, 0, 0
 	};
 
-	enemies_count_ += incr_enemies(enemies_);  // Сас
 
-	dfd.enemies_at_day_start = enemies_count_;
 
-	entity_list *el = entities_;
+	ant_list *el = entities_;
 	if (!el->entity->is_alive())
 	{
 		dfd.queen_health = dynamic_cast<queen *>(el->entity)->get_death_reason() ? -1 : -2;
 		dfd.soldier_count = -1;
 		dfd.slave_count = -1;
 		dfd.overseer_count = -1;
-		dfd.enemies_at_day_start = -1;
 		dfd.larvae_count = -1;
 		dfd.enemies_current = -1;
 		print_data(dfd);
@@ -274,7 +280,7 @@ bool nest::pass_day()
 	{
 		if (el->next && !el->next->entity->is_alive())
 		{
-			entity_list *d = el->next;
+			ant_list *d = el->next;
 			el->next = el->next->next;
 			delete d->entity;
 			delete d;
@@ -294,8 +300,6 @@ bool nest::pass_day()
 			break;
 		}
 		el->entity->act();
-		if (enemies_count_ && was_hit_successful(false))
-			el->entity->hit(get_fair_enemy_power());
 		el = el->next;
 	}
 	dfd.enemies_current = enemies_count_;
@@ -303,12 +307,27 @@ bool nest::pass_day()
 	return true;
 }
 
+data_for_day nest::start_day()
+{
+	data_for_day dfd{
+		day_++,					
+		entities_->entity->get_health(),
+		food_quantity_,
+		enemies_count_,
+		enemies_count_,
+		0, 0, 0, 0
+	};
+
+
+	return dfd;
+}
+
 double nest::get_percentage(const char type) const
 {
 	int count = 0;
 	int needed_type_count = 0;
 
-	entity_list *el = entities_;
+	ant_list *el = entities_;
 	while (el)
 	{
 		count++;
@@ -322,10 +341,10 @@ double nest::get_percentage(const char type) const
 
 nest::~nest()
 {
-	entity_list *el = entities_;
+	ant_list *el = entities_;
 	while (el)
 	{
-		entity_list *d = el;
+		ant_list *d = el;
 		el = el->next;
 		delete d->entity;
 		delete d;

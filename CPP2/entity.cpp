@@ -30,7 +30,22 @@ void entity::heal()
 		health_ = max_health_;
 }
 
-int entity::get_health()
+int entity::get_health() const
 {
 	return health_;
+}
+
+bool entity::is_alive()
+{
+	return health_ > 0;
+}
+
+void entity::turn()
+{
+	turned_ = !turned_;
+}
+
+bool entity::is_turned() const
+{
+	return turned_;
 }

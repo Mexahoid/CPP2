@@ -11,5 +11,6 @@ public:
 	int get_power() const;
 	void use_res(int *value) const;
 	static int get_reveal_chance();
+	virtual void hit_another(entity *entity);
 };
 

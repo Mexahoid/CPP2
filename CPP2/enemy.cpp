@@ -36,3 +36,9 @@ int enemy::get_reveal_chance()
 	return rand() % 101;
 }
 
+void enemy::hit_another(entity* entity)
+{
+	entity->hit(power_);
+}
+
+

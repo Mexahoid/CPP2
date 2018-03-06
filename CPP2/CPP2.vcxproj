@@ -147,18 +147,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="consts.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="entities.h" />
     <ClInclude Include="ant.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="larvae.h" />
+    <ClInclude Include="main_entities.h" />
     <ClInclude Include="overseer.h" />
     <ClInclude Include="queen.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="slave.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="nest.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="soldier.h" />
+    <ClInclude Include="world.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CPP2.cpp" />
@@ -177,6 +181,10 @@
     </ClCompile>
     <ClCompile Include="soldier.cpp" />
     <ClCompile Include="nest.cpp" />
+    <ClCompile Include="world.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="CPP2.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
