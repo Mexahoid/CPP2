@@ -1,10 +1,63 @@
 #include "stdafx.h"
 #include "entity.h"
+#include "consts.h"
 
 // Entity спавнится с болезнью вызова
 
 entity::~entity() = default;
 
+void entity::send_hit_message(char type, int damage) const
+{
+	if (FIGHT_INFO)
+	{
+		const char *name;
+		switch (type)
+		{
+		case 0:
+			name = "Queen";
+			if (!QUEEN_FIGHT_INFO)
+				return;
+			break;
+		case 1:
+			name = "Soldier";
+			break;
+		case 2:
+			name = "Overseer";
+			if (!OVERSEER_FIGHT_INFO)
+				return;
+			break;
+		case 3:
+			name = "Slave";
+			if (!SLAVE_FIGHT_INFO)
+				return;
+			break;
+		case 4:
+			name = "Larva";
+			if (!LARVA_FIGHT_INFO)
+				return;
+			break;
+		default:
+			name = "Enemy";
+			if (!ENEMY_FIGHT_INFO)
+				return;
+			break;
+		}
+		//_messenger("---------------------", true);
+		_messenger(name, false);
+		_messenger(" got hit for ", false);
+		_messenger(std::to_string(damage).c_str(), false);
+		_messenger(" damage.", true);
+		_messenger("Current health: ", false);
+		_messenger(std::to_string(_health).c_str(), false);
+		_messenger(" hp.", true);
+		//_messenger("---------------------", true);
+		if (_health < 1)
+		{
+			_messenger(name, false);
+			_messenger(" was slain.", true);
+		}
+	}
+}
 entity::entity()
 {
 	_hunger = 0;
@@ -30,6 +83,7 @@ entity::entity(const entity_data data)
 void entity::hit(const int damage)
 {
 	_health -= damage;
+	send_hit_message(_type, damage);
 }
 
 int entity::get_damage() const
@@ -69,4 +123,9 @@ bool entity::is_alive()
 bool entity::is_tapped() const
 {
 	return _tapped;
+}
+
+char entity::get_type() const
+{
+	return _type;
 }

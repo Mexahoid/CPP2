@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "overseer.h"
+#include <string>
 
 
 overseer::overseer(nest *const nest) : ant(nest, nest->get_info(2))
@@ -12,7 +13,13 @@ void overseer::act()
 	if (!_tapped)
 	{
 		ant::act();
-		tap();
+		tap(); 
+		if (_health < 1)
+		{
+			_messenger("---------------------", true);
+			_messenger("Overseer died due to starvation.", true);
+			_messenger("---------------------", true);
+		}
 	}
 }
 

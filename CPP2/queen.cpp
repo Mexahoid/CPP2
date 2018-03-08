@@ -2,6 +2,7 @@
 #include "queen.h"
 #include <ctime>
 #include <cstdlib>
+#include <string>
 
 queen::queen(nest *const nest) : ant(nest, nest->get_info(0))
 {
@@ -35,12 +36,27 @@ void queen::ask_for_evolve() const
 	{
 	case 1:
 		_nest->add_new_ant(new soldier(_nest));
+		if (LARVA_ASK_TO_QUEEN_INFO)
+		{
+			_messenger("By my command you evolve to Soldier!", true);
+			_messenger("---------------------", true);
+		}
 		break;
 	case 2:
 		_nest->add_new_ant(new overseer(_nest));
+		if (LARVA_ASK_TO_QUEEN_INFO)
+		{
+			_messenger("By my command you evolve to Overseer!", true);
+			_messenger("---------------------", true);
+		}
 		break;
 	case 3:
 		_nest->add_new_ant(new slave(_nest));
+		if (LARVA_ASK_TO_QUEEN_INFO)
+		{
+			_messenger("By my command you evolve to Slave!", true);
+			_messenger("---------------------", true);
+		}
 		break;
 	default:
 		break;
@@ -59,10 +75,16 @@ void queen::act()
 	// Сначала попробовать поесть
 	if (!_tapped)
 		ant::act();
-	
+
 	// Вдруг сразу не хватило еды, надо подохнуть
 	if (_health < 1)
 	{
+		if (STARVATION_DEATH_INFO)
+		{
+			_messenger("---------------------", true);
+			_messenger("Queen died due to starvation.", true);
+			_messenger("---------------------", true);
+		}
 		_death_reason = true;
 		return;
 	}
@@ -87,6 +109,16 @@ void queen::act()
 	{
 		srand(time(nullptr));
 		const int spawning = rand() % _power;
+
+		if (QUEEN_SPAWNING_INFO)
+		{
+			_messenger("---------------------", true);
+			_messenger("Queen spawned ", false);
+			_messenger(std::to_string(spawning).c_str(), false);
+			_messenger(" larvae.", true);
+			_messenger("---------------------", true);
+		}
+
 		for (int i = 0; i < spawning; i++)
 		{
 			larva *lv = new larva(this, _nest);

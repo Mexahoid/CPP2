@@ -37,3 +37,22 @@ const int ENEMIES_HUNGER = 20;
 const int SOLDIER_MULT = 10;
 const int OVERSEER_MULT = 30;
 const int SLAVE_MULT = 3;
+
+
+
+
+const bool SLAVE_ADDING_INFO = false;
+const bool ENEMY_STEALING_INFO = false;
+const bool QUEEN_SPAWNING_INFO = false;
+const bool STARVATION_DEATH_INFO = true;
+const bool LARVA_ASK_TO_QUEEN_INFO = false;
+
+const bool FIGHT_INFO = true;
+
+const bool SLAVE_FIGHT_INFO = true;
+const bool SOLDIER_FIGHT_INFO = true;
+const bool OVERSEER_FIGHT_INFO = true;
+const bool QUEEN_FIGHT_INFO = true;
+const bool LARVA_FIGHT_INFO = true;
+const bool ENEMY_FIGHT_INFO = true;
+const bool TWOHEADED_FIGHT_INFO = true;

@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 
 typedef struct entity_data{
@@ -8,15 +9,19 @@ typedef struct entity_data{
 	int damage;
 } entity_data;
 
+typedef void(*messenger)(const char *, bool);
 
 class entity
 {
 protected:
 
+	void send_hit_message(char type, int damage) const;
 	int _health;
 	int _max_health;
 	int _heal_amount;
+	char _type = 5;
 
+	messenger _messenger;
 	int _hunger;
 	int _damage;
 
@@ -33,5 +38,6 @@ public:
 	virtual void tap();
 	virtual void untap();
 	bool is_tapped() const;
+	char get_type() const;
 };
 

@@ -28,9 +28,10 @@ class nest
 	int _enemies_count = 0;
 	int _enemies_per_soldier = 0;
 	int _day = 0;
+	messenger _messenger;
 
 public:
-	explicit nest(starting_numbers numbers);
+	explicit nest(starting_numbers numbers, messenger messenger);
 	void overseer_increase(int power);
 	void overseer_decrease(int power);
 	bool use_resources(int count);
@@ -45,6 +46,6 @@ public:
 	void untap_all();
 	void clear_dead() const;
 	void get_attack(enemy *enemy);
-
+	messenger get_messenger() const;
 	~nest();
 };

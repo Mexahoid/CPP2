@@ -5,32 +5,43 @@
 #include <ctime>
 #include <iostream>
 
-void world::incr_enemies(int count)
+void print_data(data_for_day dt, const bool upkeep = true)
 {
-	enemy_list *el = _enemies;
-	if (!el)
+	std::cout << "=============================";
+	if (upkeep)
+		std::cout << "============================";
+	std::cout << std::endl;
+	const char *starting = upkeep ? "Start of the day " : "End of the day ";
+	std::cout << starting << dt.day << std::endl;
+	if (dt.queen_health > 0)
+		std::cout << "Queen health: " << dt.queen_health << std::endl;
+	else
 	{
-		count--;
-		enemy_list *nel = new enemy_list();
-		nel->enemy = new enemy();
-		nel->next = nullptr;
-		_enemies = nel;
-		el = _enemies;
+		std::cout << "Queen died due to: " << (dt.queen_health == -1 ? "starvation" : "enemies") << std::endl;
 	}
-	while(el->next)
-	{
-		el = el->next;
-	}
-	for (int i = 0; i < count; i++)
-	{
-		enemy_list *nel = new enemy_list();
-		nel->enemy = new enemy();
-		nel->next = nullptr;
-		el->next = nel;
-		el = el->next;
-	}
+	std::cout << "Food count: " << dt.food_current << std::endl;
+	if (dt.soldier_count > -1)
+		std::cout << "Soldiers count: " << dt.soldier_count << std::endl;
+	if (dt.overseer_count > -1)
+		std::cout << "Overseers count: " << dt.overseer_count << std::endl;
+	if (dt.slave_count > -1)
+		std::cout << "Slaves count: " << dt.slave_count << std::endl;
+	if (dt.larvae_count > -1)
+		std::cout << "Larvae count: " << dt.larvae_count << std::endl;
+
+	std::cout << "=============================";
+		if (!upkeep)
+			std::cout << "============================";
+	std::cout << std::endl;
+
 }
 
+void print_info(const char *text, bool add_endl)
+{
+	std::cout << text;
+	if (add_endl)
+		std::cout << std::endl;
+}
 
 void delete_next_dead_enemies(enemy_list *enml)
 {
@@ -53,29 +64,33 @@ void delete_next_dead_enemies(enemy_list *enml)
 	}
 }
 
-void print_data(data_for_day dt, const bool upkeep = true)
+
+void world::incr_enemies(int count)
 {
-	const char *starting = upkeep ? "Start of the day " : "End of the day ";
-	std::cout << starting << dt.day << std::endl;
-	if (dt.queen_health > 0)
-		std::cout << "Queen health: " << dt.queen_health << std::endl;
-	else
+	enemy_list *el = _enemies;
+	if (!el)
 	{
-		std::cout << "Queen died due to: " << (dt.queen_health == -1 ? "starvation" : "enemies") << std::endl;
+		count--;
+		enemy_list *nel = new enemy_list();
+		nel->enemy = new enemy(print_info);
+		nel->next = nullptr;
+		_enemies = nel;
+		el = _enemies;
 	}
-	std::cout << "Food count: " << dt.food_current << std::endl;
-	if (dt.soldier_count > -1)
-		std::cout << "Soldiers count: " << dt.soldier_count << std::endl;
-	if (dt.overseer_count > -1)
-		std::cout << "Overseers count: " << dt.overseer_count << std::endl;
-	if (dt.slave_count > -1)
-		std::cout << "Slaves count: " << dt.slave_count << std::endl;
-	if (dt.larvae_count > -1)
-		std::cout << "Larvae count: " << dt.larvae_count << std::endl;
-
-	std::cout << "=============================" << std::endl;
-
+	while(el->next)
+	{
+		el = el->next;
+	}
+	for (int i = 0; i < count; i++)
+	{
+		enemy_list *nel = new enemy_list();
+		nel->enemy = new enemy(print_info);
+		nel->next = nullptr;
+		el->next = nel;
+		el = el->next;
+	}
 }
+
 
 void world::clear_enemy_list()
 {
@@ -152,7 +167,7 @@ bool world::second_main_phase() const
 
 world::world(const starting_numbers st)
 {
-	_nest = new nest(st);
+	_nest = new nest(st, print_info);
 	_enemies = nullptr;
 }
 
