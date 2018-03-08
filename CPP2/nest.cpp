@@ -69,17 +69,124 @@ bool was_hit_successful(const bool is_enemy)
 	return hit_chance * mult > hit_chance_threshold;
 }
 
-void fight(entity *victim, enemy *enemy)
+const char *get_name(char type)
 {
-
-	if (was_hit_successful(true))
+	const char *name;
+	switch (type)
 	{
-		enemy->hit_another(victim);
+	case 0:
+		name = "Queen";
+		break;
+	case 1:
+		name = "Soldier";
+		break;
+	case 2:
+		name = "Overseer";
+		break;
+	case 3:
+		name = "Slave";
+		break;
+	case 4:
+		name = "Larva";
+		break;
+	default:
+		name = "Enemy";
+		break;
+	}
+	return name;
+}
+
+void fight(entity *victim, enemy *enemy, messenger messenger)
+{
+	const char *name = get_name(victim->get_type());
+	if (FIGHT_INFO && TWOHEADED_FIGHT_INFO)
+	{
+		messenger("---------------------", true);
+		messenger("Fight between: ", true);
+		messenger(name, false);
+		messenger(" - ", false);
+		messenger(std::to_string(victim->get_health()).c_str(), false);
+		messenger(" hp., ", false);
+		messenger(std::to_string(victim->get_damage()).c_str(), false);
+		messenger(" dmg. and Enemy - ", false);
+		messenger(std::to_string(enemy->get_health()).c_str(), false);
+		messenger(" hp., ", false);
+		messenger(std::to_string(enemy->get_damage()).c_str(), false);
+		messenger(" dmg. started.", true);
 	}
 
-	if (was_hit_successful(false))
+	srand(time(nullptr));
+	const bool first_hit_for_enemy = rand() % 101 < 40;
+	if (FIGHT_INFO && TWOHEADED_FIGHT_INFO)
 	{
-		enemy->hit(victim->get_damage());
+		if (first_hit_for_enemy)
+			messenger("First turn for Enemy", true);
+		else
+		{
+			messenger("First turn for ", false);
+			messenger(name, true);
+		}
+		messenger("...............", true);
+	}
+
+	bool messaged = false;
+	if (first_hit_for_enemy)
+		if (was_hit_successful(true))
+		{
+			if (FIGHT_INFO && TWOHEADED_FIGHT_INFO)
+				messenger("Enemy hit successful.", true);
+			enemy->hit_another(victim);
+			if (FIGHT_INFO && TWOHEADED_FIGHT_INFO)
+				messenger("...............", true);
+			messaged = true;
+		}
+		else
+			if (FIGHT_INFO && TWOHEADED_FIGHT_INFO)
+				messenger("Enemy missed.", true);
+
+	if (victim->is_alive())
+		if (was_hit_successful(false))
+		{
+			if (FIGHT_INFO && TWOHEADED_FIGHT_INFO)
+			{
+				messenger(name, false);
+				messenger(" hit successful.", true);
+			}
+			enemy->hit(victim->get_damage());
+			if (FIGHT_INFO && TWOHEADED_FIGHT_INFO)
+				messenger("...............", true);
+			messaged = true;
+			victim->tap();
+		}
+		else
+		{
+			if (FIGHT_INFO && TWOHEADED_FIGHT_INFO)
+			{
+				messenger(name, false);
+				messenger(" missed.", true);
+			}
+		}
+
+	if (!first_hit_for_enemy && enemy->is_alive())
+	{
+		if (was_hit_successful(true))
+		{
+			if (FIGHT_INFO && TWOHEADED_FIGHT_INFO)
+				messenger("Enemy hit successful.", true);
+			enemy->hit_another(victim);
+			messaged = true;
+		}
+		else
+			if (FIGHT_INFO && TWOHEADED_FIGHT_INFO)
+				messenger("Enemy missed.", true);
+		if (FIGHT_INFO && TWOHEADED_FIGHT_INFO)
+			messenger("...............", true);
+	}
+	if (FIGHT_INFO && TWOHEADED_FIGHT_INFO)
+	{
+		if (!messaged)
+			messenger("Both hits missed.", true);
+		messenger("---------------------", true);
 	}
 }
 
@@ -170,8 +277,43 @@ void delete_next_dead_ants(ant_list *prev)
 
 }
 
+void fight_random(ant_list *entities, enemy *enemy, messenger messenger)
+{
+	srand(time(nullptr));
+	int victim_type = rand() % 5;
+	ant_list *al = entities;
+	while (al)
+	{
+		if (al->entity->get_type() == victim_type)
+		{
+			if (FIGHT_INFO && TWOHEADED_FIGHT_INFO)
+			{
+				messenger("Enemy has attacked ", false);
+				messenger(get_name(victim_type), true);
+			}
+			bool doonce = true;
+			if (victim_type == 1)
+				if (FIGHT_INFO && TWOHEADED_FIGHT_INFO)
+				{
+					messenger("Soldier will attack Enemy 'till one of them dies.", true);
+				}
+			while (doonce)
+			{
+				if (victim_type != 1)
+					doonce = false;
+				if (enemy->is_alive())
+					fight(al->entity, enemy, messenger);
+				else
+					doonce = false;
+			}
 
-void soldier_reveal(ant_list *ants, enemy *enemy)
+			break;
+		}
+		al = al->next;
+	}
+}
+
+bool soldier_reveal(ant_list *ants, enemy *enemy, messenger messenger)
 {
 	ant_list *al = ants;
 	int type = al->entity->get_type();
@@ -185,12 +327,20 @@ void soldier_reveal(ant_list *ants, enemy *enemy)
 	}
 	if (al)
 	{
-		fight(al->entity, enemy);
+		fight(al->entity, enemy, messenger);
+		return true;
 	}
+	if(FIGHT_INFO && TWOHEADED_FIGHT_INFO)
+	{
+		messenger("All Soldiers are tired. This Enemy saved its life. But not for long..", true);
+		messenger("*********************", true);
+	}
+	return false;
 }
 
-nest::nest(const starting_numbers numbers)
+nest::nest(const starting_numbers numbers, const messenger messenger)
 {
+	_messenger = messenger;
 	init_infos(_infos);
 	_food_max_default = numbers.food_max;
 	_food_max = numbers.food_max;
@@ -198,7 +348,7 @@ nest::nest(const starting_numbers numbers)
 
 	queen * q = new queen(this);
 	_entities = new ant_list();
-	_entities->entity = static_cast<ant *>(q);
+	_entities->entity = q;
 	_entities->next = nullptr;
 
 	init_starting(numbers, _entities, this, q);
@@ -335,13 +485,14 @@ void nest::get_attack(enemy* enemy)
 	const int chance_enemy = rand() % 101;
 	const int chance_victim = rand() % 101;
 	const bool for_food = rand() % 101 < 50;
-	const int victim_type = rand() % 5;
 	int type = -1;
 	if (for_food)
 	{
 		if (soldier::get_revealing_chance() > enemy::get_reveal_chance())
 		{
-			soldier_reveal(_entities, enemy);
+			if (FIGHT_INFO && TWOHEADED_FIGHT_INFO)
+				_messenger("Enemy tried to steal food. It was revealed by lurking Soldier.", true);
+			soldier_reveal(_entities, enemy, _messenger);
 		}
 		else
 		{
@@ -352,22 +503,43 @@ void nest::get_attack(enemy* enemy)
 	else
 		if (chance_enemy > chance_victim)
 		{
-			while (al)
-			{
-				if (al->entity->get_type() == victim_type)
+			fight_random(_entities, enemy, _messenger);
+
+			if (enemy->is_alive())
+				if (soldier::get_revealing_chance() * 2 > enemy::get_reveal_chance())
 				{
-					fight(al->entity, enemy);
-					break;
+					if (FIGHT_INFO && TWOHEADED_FIGHT_INFO)
+					{
+						_messenger("Previous fight was revealed by guardian Soldiers.", true);
+						_messenger("Soldiers are going to attack an invader.", true);
+					}
+					while (enemy->is_alive())
+						if(!soldier_reveal(_entities, enemy, _messenger))
+							break;
+					if(enemy->is_alive())
+						fight_random(_entities, enemy,  _messenger);
 				}
-				al = al->next;
-			}
-			if (soldier::get_revealing_chance() * 2 > enemy::get_reveal_chance())
-				soldier_reveal(_entities, enemy);
 		}
 		else
 		{
-			soldier_reveal(_entities, enemy);
+			if (FIGHT_INFO && TWOHEADED_FIGHT_INFO)
+			{
+				const bool no_lore = rand() % 101 < 50;
+				_messenger(no_lore ?
+					"Enemy has attacked random Soldier." :
+					"Soldier has attacked lurking Enemy.", true);
+			}
+			soldier_reveal(_entities, enemy, _messenger);
+			if (enemy->is_alive())
+			{
+				fight_random(_entities, enemy, _messenger);
+			}
 		}
+}
+
+messenger nest::get_messenger() const
+{
+	return _messenger;
 }
 
 
