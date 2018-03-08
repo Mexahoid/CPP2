@@ -3,13 +3,13 @@
 #include "soldier.h"
 #include "overseer.h"
 #include "slave.h"
-#include "larvae.h"
+#include "larva.h"
 #include "nest.h"
 
 class queen : public ant
 {
 private:
-	bool death_reason_ = false;
+	bool _death_reason = false;
 public:
 	queen(nest *nest);
 	void ask_for_evolve() const;

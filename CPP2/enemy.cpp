@@ -7,25 +7,17 @@
 enemy::enemy()
 {
 	srand(time(nullptr));
-	power_ = rand() % ENEMIES_POWER_MAX;
-	health_ = rand() % ENEMIES_HEALTH_MAX;
-	heal_amount_ = health_ / 10;
-	hunger_ = ENEMIES_HUNGER;
-}
-
-int enemy::get_hunger() const
-{
-	return hunger_;
-}
-
-int enemy::get_power() const
-{
-	return power_;
+	_damage = rand() % ENEMIES_POWER_MAX;
+	_health = rand() % ENEMIES_HEALTH_MAX + 1;
+	_max_health = _health;
+	_heal_amount = _health / 5 + 1;
+	_tapped = rand() % 101 < 50;
+	_hunger = ENEMIES_HUNGER;
 }
 
 void enemy::use_res(int *value) const
 {
-	*value -= hunger_;
+	*value -= _hunger;
 	if (*value < 0)
 		*value = 0;
 }
@@ -38,7 +30,9 @@ int enemy::get_reveal_chance()
 
 void enemy::hit_another(entity* entity)
 {
-	entity->hit(power_);
+	if(!_tapped)
+		entity->hit(_damage);
+	tap();
 }
 
 

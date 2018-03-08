@@ -2,12 +2,12 @@
 #include "entities.h"
 #include "nest.h"
 
-class larvae : public ant
+class larva : public ant
 {
 private:
-	queen const *q_;
+	queen const *_q;
 public:
-	larvae(queen const *q, nest *nest, bool is_inited);
+	larva(queen const *q, nest *nest, bool is_inited = false);
 	void act() override;
 	void evolve();
 };

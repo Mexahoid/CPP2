@@ -2,23 +2,22 @@
 #include "ant.h"
 #include "nest.h"
 
-ant::ant(nest *nest, const ant_data ed) : entity(ed.health, ed.hunger, ed.healing)
+ant::ant(nest *nest, const ant_data ed) : entity(ed.ed)
 {
-	this->nest_ = nest;
-	power_ = ed.power;
-	type_ = ed.type;
+	this->_nest = nest;
+	_power = ed.power;
+	_type = ed.type;
 }
 
 void ant::act()
 {
-	if(health_ < max_health_ - heal_amount_)
-	if (nest_->use_resources(hunger_))
+	if (_nest->use_resources(_hunger))
 		heal();
 	else
-		health_ -= heal_amount_ / 2;
+		_health -= _heal_amount / 2;
 }
 
 char ant::get_type() const
 {
-	return type_;
+	return _type;
 }

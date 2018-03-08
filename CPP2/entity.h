@@ -1,21 +1,37 @@
 #pragma once
+
+
+typedef struct entity_data{
+	int health;
+	int healing;
+	int hunger;
+	int damage;
+} entity_data;
+
+
 class entity
 {
 protected:
-	int health_;
-	int max_health_;
-	int hunger_;
-	int heal_amount_;
-	bool turned_;
+
+	int _health;
+	int _max_health;
+	int _heal_amount;
+
+	int _hunger;
+	int _damage;
+
+	bool _tapped;
 public:
-	virtual ~entity() = default;
+	virtual ~entity();
 	entity();
-	entity(int health, int hunger, int healing);
+	explicit entity(entity_data data);
 	virtual void hit(int damage);
+	int get_damage() const;
 	virtual void heal();
 	int get_health() const;
 	virtual bool is_alive();
-	virtual void turn();
-	bool is_turned() const;
+	virtual void tap();
+	virtual void untap();
+	bool is_tapped() const;
 };
 

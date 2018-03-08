@@ -5,9 +5,9 @@
 class ant : public entity
 {
 protected:
-	nest *nest_;
-	int power_ = 0;
-	char type_ = 5;
+	nest *_nest;
+	int _power = 0;
+	char _type = 5;
 public:
 	explicit ant(nest *nest, ant_data ed);
 	virtual void act();

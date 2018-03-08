@@ -4,15 +4,19 @@
 
 overseer::overseer(nest *const nest) : ant(nest, nest->get_info(2))
 {
-	nest_->overseer_increase(power_);
+	_nest->overseer_increase(_power);
 }
 
 void overseer::act()
 {
-	ant::act();
+	if (!_tapped)
+	{
+		ant::act();
+		tap();
+	}
 }
 
 overseer::~overseer()
 {
-	nest_->overseer_decrease(power_);
+	_nest->overseer_decrease(_power);
 }

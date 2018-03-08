@@ -5,15 +5,18 @@
 
 soldier::soldier(nest *const nest) : ant(nest, nest->get_info(1))
 {
+	// Выходит на поле боя без болезни вызова
+	entity::untap();
 }
 
 void soldier::act()
 {
+	// Zoldaten имеет трейт бдительности, потому не разворачивается при еде
 	ant::act();
-	if (health_ < 1)
+	if (_health < 1)
 		return;
-	nest_->use_resources(hunger_);
-	nest_->clear_enemies(power_, &health_);
+	if (_health <= _max_health - _heal_amount)
+		ant::act();
 }
 
 int soldier::get_revealing_chance()
@@ -24,6 +27,6 @@ int soldier::get_revealing_chance()
 
 void soldier::hit_enemy(enemy* enemy) const
 {
-	enemy->hit(power_);
+	enemy->hit(_power);
 }
 

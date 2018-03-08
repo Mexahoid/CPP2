@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -152,7 +152,7 @@
     <ClInclude Include="entities.h" />
     <ClInclude Include="ant.h" />
     <ClInclude Include="entity.h" />
-    <ClInclude Include="larvae.h" />
+    <ClInclude Include="larva.h" />
     <ClInclude Include="main_entities.h" />
     <ClInclude Include="overseer.h" />
     <ClInclude Include="queen.h" />
@@ -169,7 +169,7 @@
     <ClCompile Include="ant.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="entity.cpp" />
-    <ClCompile Include="larvae.cpp" />
+    <ClCompile Include="larva.cpp" />
     <ClCompile Include="overseer.cpp" />
     <ClCompile Include="queen.cpp" />
     <ClCompile Include="slave.cpp" />

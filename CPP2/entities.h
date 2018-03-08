@@ -1,6 +1,7 @@
 #pragma once
 #include "consts.h"
 #include "main_entities.h"
+#include "entity.h"
 
 
 class ant;
@@ -8,7 +9,7 @@ class queen;
 class soldier;
 class overseer;
 class slave;
-class larvae;
+class larva;
 
 
 typedef struct ant_list {
@@ -18,9 +19,7 @@ typedef struct ant_list {
 
 typedef struct ant_data
 {
-	int health;
-	int hunger;
+	entity_data ed;
 	int power;
 	char type;
-	int healing;
 } ant_data;

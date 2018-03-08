@@ -5,7 +5,7 @@
 
 queen::queen(nest *const nest) : ant(nest, nest->get_info(0))
 {
-	turned_ = false;
+	_tapped = false;
 }
 
 void queen::ask_for_evolve() const
@@ -14,7 +14,7 @@ void queen::ask_for_evolve() const
 	double percentage[] = { 0, 0, 0 };
 	for (type = 0; type < 3; type++)
 	{
-		percentage[type] = nest_->get_percentage(type + 1);
+		percentage[type] = _nest->get_percentage(type + 1);
 	}
 
 	percentage[0] *= SOLDIER_MULT;
@@ -34,13 +34,13 @@ void queen::ask_for_evolve() const
 	switch (lesser_type + 1)
 	{
 	case 1:
-		nest_->add_new_ant(new soldier(nest_));
+		_nest->add_new_ant(new soldier(_nest));
 		break;
 	case 2:
-		nest_->add_new_ant(new overseer(nest_));
+		_nest->add_new_ant(new overseer(_nest));
 		break;
 	case 3:
-		nest_->add_new_ant(new slave(nest_));
+		_nest->add_new_ant(new slave(_nest));
 		break;
 	default:
 		break;
@@ -50,52 +50,53 @@ void queen::ask_for_evolve() const
 void queen::act()
 {
 	// Если ее загрызли
-	if (health_ < 1)
+	if (_health < 1)
 	{
-		death_reason_ = false;
+		_death_reason = false;
 		return;
 	}
 
 	// Сначала попробовать поесть
-	if (!turned_)
+	if (!_tapped)
 		ant::act();
 	
 	// Вдруг сразу не хватило еды, надо подохнуть
-	if (health_ < 1)
+	if (_health < 1)
 	{
-		death_reason_ = true;
+		_death_reason = true;
 		return;
 	}
 
 	// Если повернута, но ХП не полное 
 	// для второй мейн фазы
-	if (turned_ && health_ <= max_health_ - heal_amount_)
+	if (_tapped && _health <= _max_health - _heal_amount)
 		ant::act();
 
 	// Если личинок уже больше 30%, то повернуться и выйти
 	// Т.е. если в первой мейн фазе спавнить не нужно
-	if (nest_->get_percentage(4) > 0.3)
+	// А во второй мейн фазе нельзя заспавнить, если заспавнила в первой
+	if (!_tapped && _nest->get_percentage(4) > 0.3)
 	{
-		turned_ = true;
+		tap();
 		return;
 	}
 
 	// Если личинок меньше и она не повернута
 	// Может сработать как в первой, так и во второй мейн фазе
-	if (!turned_)
+	if (!_tapped)
 	{
 		srand(time(nullptr));
-		const int spawning = rand() % power_;
+		const int spawning = rand() % _power;
 		for (int i = 0; i < spawning; i++)
 		{
-			larvae *lv = new larvae(this, nest_, false);
-			nest_->add_new_ant(lv);
+			larva *lv = new larva(this, _nest);
+			_nest->add_new_ant(lv);
 		}
-		turned_ = true;
+		tap();
 	}
 }
 
 bool queen::get_death_reason() const
 {
-	return death_reason_;
+	return _death_reason;
 }
