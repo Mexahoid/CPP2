@@ -50,9 +50,9 @@ const bool LARVA_ASK_TO_QUEEN_INFO = false;
 const bool FIGHT_INFO = true;
 
 const bool SLAVE_FIGHT_INFO = true;
-const bool SOLDIER_FIGHT_INFO = true;
-const bool OVERSEER_FIGHT_INFO = true;
-const bool QUEEN_FIGHT_INFO = true;
-const bool LARVA_FIGHT_INFO = true;
-const bool ENEMY_FIGHT_INFO = true;
+const bool SOLDIER_HIT_INFO = true;
+const bool OVERSEER_HIT_INFO = true;
+const bool QUEEN_HIT_INFO = true;
+const bool LARVA_HIT_INFO = true;
+const bool ENEMY_HIT_INFO = true;
 const bool TWOHEADED_FIGHT_INFO = true;

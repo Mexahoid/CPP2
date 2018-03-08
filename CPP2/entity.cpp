@@ -15,7 +15,7 @@ void entity::send_hit_message(char type, int damage) const
 		{
 		case 0:
 			name = "Queen";
-			if (!QUEEN_FIGHT_INFO)
+			if (!QUEEN_HIT_INFO)
 				return;
 			break;
 		case 1:
@@ -23,7 +23,7 @@ void entity::send_hit_message(char type, int damage) const
 			break;
 		case 2:
 			name = "Overseer";
-			if (!OVERSEER_FIGHT_INFO)
+			if (!OVERSEER_HIT_INFO)
 				return;
 			break;
 		case 3:
@@ -33,12 +33,12 @@ void entity::send_hit_message(char type, int damage) const
 			break;
 		case 4:
 			name = "Larva";
-			if (!LARVA_FIGHT_INFO)
+			if (!LARVA_HIT_INFO)
 				return;
 			break;
 		default:
 			name = "Enemy";
-			if (!ENEMY_FIGHT_INFO)
+			if (!ENEMY_HIT_INFO)
 				return;
 			break;
 		}
