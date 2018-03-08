@@ -8,7 +8,6 @@ typedef struct {
 	int day;
 	int queen_health;
 	int food_current;
-	int enemies_current;
 
 	int soldier_count;
 	int overseer_count;
@@ -20,16 +19,15 @@ typedef struct {
 
 class nest
 {
-	ant_list *entities_;
-	enemy_list *enemies_;
-	ant_data infos_[5];
+	ant_list *_entities;
+	ant_data _infos[5];
 
-	int food_quantity_;
-	int food_max_default_;
-	int food_max_;
-	int enemies_count_ = 0;
-	int enemies_per_soldier_ = 0;
-	int day_ = 1;
+	int _food_quantity;
+	int _food_max_default;
+	int _food_max;
+	int _enemies_count = 0;
+	int _enemies_per_soldier = 0;
+	int _day = 0;
 
 public:
 	explicit nest(starting_numbers numbers);
@@ -38,14 +36,15 @@ public:
 	bool use_resources(int count);
 	void add_resources(int count);
 	ant_data get_info(char type) const;
-	void clear_enemies(int amount, int *health);
-	void clear_enemies(soldier *sold) const;
 	void add_new_ant(ant *ent) const;
 	double get_percentage(char type) const;
-	bool pass_day();
 
-	data_for_day start_day();
+	void act() const;
+	data_for_day collect_data() const;
 
+	void untap_all();
+	void clear_dead() const;
+	void get_attack(enemy *enemy);
 
 	~nest();
 };

@@ -8,7 +8,7 @@ class world
 	nest *_nest;
 	bool first_main_phase();
 	void attack_phase() const;
-	bool second_main_phase();
+	bool second_main_phase() const;
 
 	void incr_enemies(int count);
 	void clear_enemy_list();

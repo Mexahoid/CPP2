@@ -140,7 +140,7 @@ void world::attack_phase() const
 	}
 }
 
-bool world::second_main_phase()
+bool world::second_main_phase() const
 {
 	_nest->act();
 	const data_for_day dfd = _nest->collect_data();
